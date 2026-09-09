@@ -1,0 +1,755 @@
+---
+title: "StreamClimes ESV"
+output: html_document
+date: "2026-07-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#set Working Directory
+```{r}
+setwd("~/Documents/Documents - Hannah MacBook Air/Penn State/Allen Lab/StreamCLIMES_ESV")
+```
+
+#Load packages
+```{r}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+
+
+#BR5
+##import all 20 taxonomy tables from the subsets as independent variables
+
+```{r}
+BR5_taxonomy_1 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_1.csv")
+BR5_taxonomy_2 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_2.csv")
+BR5_taxonomy_3 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_3.csv")
+BR5_taxonomy_4 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_4.csv")
+BR5_taxonomy_5 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_5.csv")
+BR5_taxonomy_6 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_6.csv")
+BR5_taxonomy_7 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_7.csv")
+BR5_taxonomy_8 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_8.csv")
+BR5_taxonomy_9 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_9.csv")
+BR5_taxonomy_10 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_10.csv")
+BR5_taxonomy_11 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_11.csv")
+BR5_taxonomy_12 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_12.csv")
+BR5_taxonomy_13 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_13.csv")
+BR5_taxonomy_14 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_14.csv")
+BR5_taxonomy_15 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_15.csv")
+BR5_taxonomy_16 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_16.csv")
+BR5_taxonomy_17 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_17.csv")
+BR5_taxonomy_18 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_18.csv")
+BR5_taxonomy_19 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_19.csv")
+BR5_taxonomy_20 <- read.csv("data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_20.csv")
+
+```
+
+###merge all 20 tables together into one mega table for analysis
+
+```{r}
+BR5_taxonomy_ALL <- rbind(BR5_taxonomy_1, BR5_taxonomy_2, BR5_taxonomy_3, BR5_taxonomy_4, BR5_taxonomy_5, BR5_taxonomy_6, BR5_taxonomy_7, BR5_taxonomy_8, BR5_taxonomy_9, BR5_taxonomy_10, BR5_taxonomy_11, BR5_taxonomy_12, BR5_taxonomy_13, BR5_taxonomy_14, BR5_taxonomy_15, BR5_taxonomy_16, BR5_taxonomy_17, BR5_taxonomy_18, BR5_taxonomy_19, BR5_taxonomy_20)
+```
+
+###filter out all rows where kingdom = "no match"
+
+```{r}
+BR5_alltaxa_withmatch <- filter(BR5_taxonomy_ALL, Kingdom != "NoMatch") 
+```
+
+##How many sequences got reads to phylum? class? order? genus? species? 
+
+```{r}
+BR5phylum_count <- sum(!is.na(BR5_alltaxa_withmatch$Phylum))
+BR5class_count <- sum(!is.na(BR5_alltaxa_withmatch$Class))
+BR5order_count <- sum(!is.na(BR5_alltaxa_withmatch$Order))
+BR5genus_count <- sum(!is.na(BR5_alltaxa_withmatch$Genus))
+BR5species_count <- sum(!is.na(BR5_alltaxa_withmatch$Species))
+```
+
+##what are the dominant reads
+
+```{r}
+#remove all no match from at phylum level
+br5_MATCH_phyla <- filter(BR5_alltaxa_withmatch, Phylum != "NoMatch")
+
+#what are the dominant phyla?
+BR5phylum_counts <- br5_MATCH_phyla %>%
+  count(Phylum, sort = TRUE)
+
+#what are the dominant class?
+BR5class_counts <- br5_MATCH_phyla %>%
+  count(Class, sort = TRUE)
+
+#what are the dominant order?
+BR5order_counts <- br5_MATCH_phyla %>%
+  count(Order, sort = TRUE)
+
+#what are the dominant genus?
+BR5genus_counts <- br5_MATCH_phyla %>%
+  count(Genus, sort = TRUE)
+
+#what are the dominant species?
+BR5species_counts <- br5_MATCH_phyla %>%
+  count(Species, sort = TRUE)
+```
+
+##macroinvert phyla -> filter for aquatic invertebrates as published in thorp and covich 
+```{r}
+#remove all no match from at phylum level
+br5_MATCH_phyla <- filter(BR5_alltaxa_withmatch, Phylum != "NoMatch")
+
+#create df for each phyla published in thorp and covich
+BR5_protozoa <- filter(br5_MATCH_phyla, Phylum == "Protozoa")
+BR5_porifera <- filter(br5_MATCH_phyla, Phylum == "Porifera")
+BR5_turbellaria <- filter(br5_MATCH_phyla, Phylum == "Turbellaria")
+BR5_nemertea <- filter(br5_MATCH_phyla, Phylum == "Nemertea")
+BR5_gastrotricha <- filter(br5_MATCH_phyla, Phylum == "Gastrotricha")
+BR5_rotifera <- filter(br5_MATCH_phyla, Phylum == "Rotifera")
+BR5_nematoda <- filter(br5_MATCH_phyla, Phylum == "Nematoda")
+BR5_nematomorpha <- filter(br5_MATCH_phyla, Phylum == "Nematomorpha")
+BR5_mollusca <- filter(br5_MATCH_phyla, Phylum == "Mollusca")
+BR5_annelida <- filter(br5_MATCH_phyla, Phylum == "Annelida")
+BR5_bryozoa <- filter(br5_MATCH_phyla, Phylum == "Bryozoa")
+BR5_tardigrada <- filter(br5_MATCH_phyla, Phylum == "Tardigrada")
+BR5_arthropoda <- filter(br5_MATCH_phyla, Phylum == "Arthropoda")
+
+#create one large dataframe with all of the phyla above
+BR5_invert_phyla <- rbind(BR5_protozoa, BR5_porifera, BR5_turbellaria, BR5_nemertea, BR5_gastrotricha, BR5_rotifera, BR5_nematoda, BR5_nematomorpha, BR5_mollusca, BR5_annelida, BR5_bryozoa, BR5_tardigrada, BR5_arthropoda)
+
+BR5_invertphylum_counts_ <- BR5_invert_phyla %>%
+  count(Phylum, sort = TRUE)
+```
+
+##from the invert phyla, extract all species that are within phyla that have freshwater inverts
+
+```{r}
+invertBR5species <- BR5_invert_phyla %>% filter(!is.na(Species))
+
+```
+
+
+##macroinvert order
+
+```{r}
+BR5_coleoptera <- filter(br5_MATCH_phyla, Order == "Coleoptera")
+BR5_diptera <- filter(br5_MATCH_phyla, Order == "Diptera")
+BR5_ephemeroptera <- filter(br5_MATCH_phyla, Order == "Ephemeroptera")
+BR5_hemiptera <- filter(br5_MATCH_phyla, Order == "Hemiptera")
+BR5_plecoptera <- filter(br5_MATCH_phyla, Order == "Plecoptera")
+BR5_trichoptera <- filter(br5_MATCH_phyla, Order == "Trichoptera")
+BR5_Odonata <- filter(br5_MATCH_phyla, Order == "Odonata")
+BR5_Megaloptera <- filter(br5_MATCH_phyla, Order == "Megaloptera")
+```
+
+#COIF230
+##import all 20 taxonomy tables from the subsets as independent variables
+
+```{r}
+COIF230_taxonomy_1 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_1.csv")
+COIF230_taxonomy_2 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_2.csv")
+COIF230_taxonomy_3 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_3.csv")
+COIF230_taxonomy_4 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_4.csv")
+COIF230_taxonomy_5 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_5.csv")
+COIF230_taxonomy_6 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_6.csv")
+COIF230_taxonomy_7 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_7.csv")
+COIF230_taxonomy_8 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_8.csv")
+COIF230_taxonomy_9 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_9.csv")
+COIF230_taxonomy_10 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_10.csv")
+COIF230_taxonomy_11 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_11.csv")
+COIF230_taxonomy_12 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_12.csv")
+COIF230_taxonomy_13 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_13.csv")
+COIF230_taxonomy_14 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_14.csv")
+COIF230_taxonomy_15 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_15.csv")
+COIF230_taxonomy_16 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_16.csv")
+COIF230_taxonomy_17 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_17.csv")
+COIF230_taxonomy_18 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_18.csv")
+COIF230_taxonomy_19 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_19.csv")
+COIF230_taxonomy_20 <- read.csv("data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_20.csv")
+
+```
+
+###merge all 20 tables together into one mega table for analysis
+
+```{r}
+COIF230_taxonomy_ALL <- rbind(COIF230_taxonomy_1, COIF230_taxonomy_2, COIF230_taxonomy_3, COIF230_taxonomy_4, COIF230_taxonomy_5, COIF230_taxonomy_6, COIF230_taxonomy_7, COIF230_taxonomy_8, COIF230_taxonomy_9, COIF230_taxonomy_10, COIF230_taxonomy_11, COIF230_taxonomy_12, COIF230_taxonomy_13, COIF230_taxonomy_14, COIF230_taxonomy_15, COIF230_taxonomy_16, COIF230_taxonomy_17, COIF230_taxonomy_18, COIF230_taxonomy_19, COIF230_taxonomy_20)
+```
+
+###filter out all rows where kingdom = "no match"
+
+```{r}
+COIF230_alltaxa_withmatch <- filter(COIF230_taxonomy_ALL, Kingdom != "NoMatch") 
+```
+
+##How many sequences got reads to phylum? class? order? genus? species? 
+
+```{r}
+COIF230phylum_count <- sum(!is.na(COIF230_alltaxa_withmatch$Phylum))
+COIF230class_count <- sum(!is.na(COIF230_alltaxa_withmatch$Class))
+COIF230order_count <- sum(!is.na(COIF230_alltaxa_withmatch$Order))
+COIF230genus_count <- sum(!is.na(COIF230_alltaxa_withmatch$Genus))
+COIF230species_count <- sum(!is.na(COIF230_alltaxa_withmatch$Species))
+```
+
+##what are the dominant reads
+
+```{r}
+
+#what are the dominant phyla?
+COIF230phylum_counts <- COIF230_alltaxa_withmatch %>%
+  count(Phylum, sort = TRUE)
+
+#what are the dominant class?
+COIF230class_counts <- COIF230_alltaxa_withmatch %>%
+  count(Class, sort = TRUE)
+
+#what are the dominant order?
+COIF230order_counts <- COIF230_alltaxa_withmatch %>%
+  count(Order, sort = TRUE)
+
+#what are the dominant genus?
+COIF230genus_counts <- COIF230_alltaxa_withmatch %>%
+  count(Genus, sort = TRUE)
+
+#what are the dominant species?
+COIF230species_counts <- COIF230_alltaxa_withmatch %>%
+  count(Species, sort = TRUE)
+```
+
+
+##macroinvert phyla -> filter for aquatic invertebrates as published in thorp and covich 
+```{r}
+#create df for each phyla published in thorp and covich
+COIF230_protozoa <- filter(COIF230_alltaxa_withmatch, Phylum == "Protozoa")
+COIF230_porifera <- filter(COIF230_alltaxa_withmatch, Phylum == "Porifera")
+COIF230_turbellaria <- filter(COIF230_alltaxa_withmatch, Phylum == "Turbellaria")
+COIF230_nemertea <- filter(COIF230_alltaxa_withmatch, Phylum == "Nemertea")
+COIF230_gastrotricha <- filter(COIF230_alltaxa_withmatch, Phylum == "Gastrotricha")
+COIF230_rotifera <- filter(COIF230_alltaxa_withmatch, Phylum == "Rotifera")
+COIF230_nematoda <- filter(COIF230_alltaxa_withmatch, Phylum == "Nematoda")
+COIF230_nematomorpha <- filter(COIF230_alltaxa_withmatch, Phylum == "Nematomorpha")
+COIF230_mollusca <- filter(COIF230_alltaxa_withmatch, Phylum == "Mollusca")
+COIF230_annelida <- filter(COIF230_alltaxa_withmatch, Phylum == "Annelida")
+COIF230_bryozoa <- filter(COIF230_alltaxa_withmatch, Phylum == "Bryozoa")
+COIF230_tardigrada <- filter(COIF230_alltaxa_withmatch, Phylum == "Tardigrada")
+COIF230_arthropoda <- filter(COIF230_alltaxa_withmatch, Phylum == "Arthropoda")
+
+#create one large dataframe with all of the phyla above
+COIF230_invert_phyla <- rbind(COIF230_protozoa, COIF230_porifera, COIF230_turbellaria, COIF230_nemertea, COIF230_gastrotricha, COIF230_rotifera, COIF230_nematoda, COIF230_nematomorpha, COIF230_mollusca, COIF230_annelida, COIF230_bryozoa, COIF230_tardigrada, COIF230_arthropoda)
+
+COIF230_invertphylum_counts_ <- COIF230_invert_phyla %>%
+  count(Phylum, sort = TRUE)
+```
+
+##from the invert phyla -> how many class, order, genus, species
+
+```{r}
+#what are the dominant class?
+invertCOIF230class_counts <- COIF230_invert_phyla %>%
+  count(Class, sort = TRUE)
+
+#what are the dominant order?
+invertCOIF230order_counts <- COIF230_invert_phyla %>%
+  count(Order, sort = TRUE)
+
+#what are the dominant genus?
+invertCOIF230genus_counts <- COIF230_invert_phyla %>%
+  count(Genus, sort = TRUE)
+
+#what are the dominant species?
+invertCOIF230species_counts <- COIF230_invert_phyla %>%
+  count(Species, sort = TRUE)
+
+```
+
+##from the invert phyla, extract all species that are within phyla that have freshwater inverts
+
+```{r}
+invertCOIF230species <- COIF230_invert_phyla %>% filter(!is.na(Species))
+
+```
+
+
+#UNICOI
+##import all 20 taxonomy tables from the subsets as independent variables
+
+```{r}
+UNICOI_taxonomy_1 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_1.csv")
+UNICOI_taxonomy_2 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_2.csv")
+UNICOI_taxonomy_3 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_3.csv")
+UNICOI_taxonomy_4 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_4.csv")
+UNICOI_taxonomy_5 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_5.csv")
+UNICOI_taxonomy_6 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_6.csv")
+UNICOI_taxonomy_7 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_7.csv")
+UNICOI_taxonomy_8 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_8.csv")
+UNICOI_taxonomy_9 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_9.csv")
+UNICOI_taxonomy_10 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_10.csv")
+UNICOI_taxonomy_11 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_11.csv")
+UNICOI_taxonomy_12 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_12.csv")
+UNICOI_taxonomy_13 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_13.csv")
+UNICOI_taxonomy_14 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_14.csv")
+UNICOI_taxonomy_15 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_15.csv")
+UNICOI_taxonomy_16 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_16.csv")
+UNICOI_taxonomy_17 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_17.csv")
+UNICOI_taxonomy_18 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_18.csv")
+UNICOI_taxonomy_19 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_19.csv")
+UNICOI_taxonomy_20 <- read.csv("data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_20.csv")
+
+```
+
+###merge all 20 tables together into one mega table for analysis
+
+```{r}
+UNICOI_taxonomy_ALL <- rbind(UNICOI_taxonomy_1, UNICOI_taxonomy_2, UNICOI_taxonomy_3, UNICOI_taxonomy_4, UNICOI_taxonomy_5, UNICOI_taxonomy_6, UNICOI_taxonomy_7, UNICOI_taxonomy_8, UNICOI_taxonomy_9, UNICOI_taxonomy_10, UNICOI_taxonomy_11, UNICOI_taxonomy_12, UNICOI_taxonomy_13, UNICOI_taxonomy_14, UNICOI_taxonomy_15, UNICOI_taxonomy_16, UNICOI_taxonomy_17, UNICOI_taxonomy_18, UNICOI_taxonomy_19, UNICOI_taxonomy_20)
+```
+
+###filter out all rows where kingdom = "no match"
+
+```{r}
+UNICOI_alltaxa_withmatch <- filter(UNICOI_taxonomy_ALL, Kingdom != "NoMatch") 
+```
+
+##How many sequences got reads to phylum? class? order? genus? species? 
+
+```{r}
+UNICOIphylum_count <- sum(!is.na(UNICOI_alltaxa_withmatch$Phylum))
+UNICOIclass_count <- sum(!is.na(UNICOI_alltaxa_withmatch$Class))
+UNICOIorder_count <- sum(!is.na(UNICOI_alltaxa_withmatch$Order))
+UNICOIgenus_count <- sum(!is.na(UNICOI_alltaxa_withmatch$Genus))
+UNICOIspecies_count <- sum(!is.na(UNICOI_alltaxa_withmatch$Species))
+```
+
+##what are the dominant reads
+
+```{r}
+
+#what are the dominant phyla?
+UNICOIphylum_counts <- UNICOI_alltaxa_withmatch %>%
+  count(Phylum, sort = TRUE)
+
+#what are the dominant class?
+UNICOIclass_counts <- UNICOI_alltaxa_withmatch %>%
+  count(Class, sort = TRUE)
+
+#what are the dominant order?
+UNICOIorder_counts <- UNICOI_alltaxa_withmatch %>%
+  count(Order, sort = TRUE)
+
+#what are the dominant genus?
+UNICOIgenus_counts <- UNICOI_alltaxa_withmatch %>%
+  count(Genus, sort = TRUE)
+
+#what are the dominant species?
+UNICOIspecies_counts <- UNICOI_alltaxa_withmatch %>%
+  count(Species, sort = TRUE)
+```
+
+##macroinvert phyla -> filter for aquatic invertebrates as published in thorp and covich 
+```{r}
+#create df for each phyla published in thorp and covich
+UNICOI_protozoa <- filter(UNICOI_alltaxa_withmatch, Phylum == "Protozoa")
+UNICOI_porifera <- filter(UNICOI_alltaxa_withmatch, Phylum == "Porifera")
+UNICOI_turbellaria <- filter(UNICOI_alltaxa_withmatch, Phylum == "Turbellaria")
+UNICOI_nemertea <- filter(UNICOI_alltaxa_withmatch, Phylum == "Nemertea")
+UNICOI_gastrotricha <- filter(UNICOI_alltaxa_withmatch, Phylum == "Gastrotricha")
+UNICOI_rotifera <- filter(UNICOI_alltaxa_withmatch, Phylum == "Rotifera")
+UNICOI_nematoda <- filter(UNICOI_alltaxa_withmatch, Phylum == "Nematoda")
+UNICOI_nematomorpha <- filter(UNICOI_alltaxa_withmatch, Phylum == "Nematomorpha")
+UNICOI_mollusca <- filter(UNICOI_alltaxa_withmatch, Phylum == "Mollusca")
+UNICOI_annelida <- filter(UNICOI_alltaxa_withmatch, Phylum == "Annelida")
+UNICOI_bryozoa <- filter(UNICOI_alltaxa_withmatch, Phylum == "Bryozoa")
+UNICOI_tardigrada <- filter(UNICOI_alltaxa_withmatch, Phylum == "Tardigrada")
+UNICOI_arthropoda <- filter(UNICOI_alltaxa_withmatch, Phylum == "Arthropoda")
+
+#create one large dataframe with all of the phyla above
+UNICOI_invert_phyla <- rbind(UNICOI_protozoa, UNICOI_porifera, UNICOI_turbellaria, UNICOI_nemertea, UNICOI_gastrotricha, UNICOI_rotifera, UNICOI_nematoda, UNICOI_nematomorpha, UNICOI_mollusca, UNICOI_annelida, UNICOI_bryozoa, UNICOI_tardigrada, UNICOI_arthropoda)
+
+UNICOI_invertphylum_counts_ <- UNICOI_invert_phyla %>%
+  count(Phylum, sort = TRUE)
+```
+
+##from the invert phyla, extract all species that are within phyla that have freshwater inverts
+
+```{r}
+invertUNICOIspecies <- UNICOI_invert_phyla %>% filter(!is.na(Species))
+
+```
+
+#Merge species into one DF to check for aquatic
+
+```{r}
+#merge all 3 species dataframes
+invert_phyla_species_toCHECK <- rbind(invertBR5species, invertCOIF230species ,invertUNICOIspecies)
+
+#get list of all species present with how many reads
+invert_phyla_species_toCHECK_counts_ <- invert_phyla_species_toCHECK %>%
+  count(Species, sort = TRUE)
+
+taxonomyinvert_phyla_species_toCHECK_counts_ <- distinct(invert_phyla_species_toCHECK, Species, .keep_all = TRUE)
+
+#just species as a csv
+write.csv(invert_phyla_species_toCHECK_counts_,"outputs/tables/tables_toCheck/invert_phyla_species_toCHECK.csv", row.names = FALSE)
+
+#whole taxonomy as a csv
+write.csv(taxonomyinvert_phyla_species_toCHECK_counts_,"outputs/tables/tables_toCheck/taxonomyinvert_phyla_species_toCHECK_counts_.csv", row.names = FALSE)
+```
+
+#filter for aquatic taxa
+##fully aquatic insect taxa
+```{r}
+
+ephemeroptera_allprimerinverts <- filter(invert_phyla_species_toCHECK, Order == "Ephemeroptera")
+trichoptera_allprimerinverts <- filter(invert_phyla_species_toCHECK, Order == "Trichoptera")
+plecoptera_allprimerinverts <- filter(invert_phyla_species_toCHECK, Order == "Plecoptera")
+odonata_allprimerinverts <- filter(invert_phyla_species_toCHECK, Order == "Odonata")
+megaloptera_allprimerinverts <- filter(invert_phyla_species_toCHECK, Order == "Megaloptera")
+
+```
+
+##check against chelsea's list of aquatic insect taxa ()
+```{r}
+#create dataframe for each order in chelsea's list
+
+hemiptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Hemiptera")
+neuroptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Neuroptera")
+lepidoptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Lepidoptera")
+coleoptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Coleoptera")
+diptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Diptera")
+hymenoptera_notcleaned <- filter(invert_phyla_species_toCHECK, Order == "Hymenoptera")
+
+#filter for aquatic species plus presence in our dataset when checked in google sheets
+#hemiptera
+#family that are fully aquatic
+all_aquatictaxa_hemiptera <- filter(hemiptera_notcleaned, Family %in% c("Corixidae", "Belostomatidae", "Nepidae", "Gelastocoridae", "Ochteridae", "Naucoridae", "Pleidae", "Notonectidae", "Saldidae", "Gerridae", "Veliidae", "Hydrometridae", "Hebridae", "Mesoveliidae"))
+#there are no family that only have certian genera that are aquatic
+
+#neuroptera
+#there is only one genera that is aquatic
+all_aquatictaxa_neuroptera <- filter(neuroptera_notcleaned, Family %in% c("Sisyridae"))
+
+#lepidoptera
+#there are only 2 genera that are aquatic from the same family (Crambidae)
+all_aquatictaxa_lepidoptera <- filter(lepidoptera_notcleaned, Genus %in% c("Paraponyx", "Petrophila"))
+
+#coleoptera
+#family that are fully aquatic
+all_aquaticorder_coleoptera <- filter(coleoptera_notcleaned, Family %in% c("Haliplidae", "Noteridae", "Dytiscidae", "Hydrophilidae", "Dryopidae", "Elmidae", "Scirtidae", "Psephenidae"))
+#from the family that only that have some aquatic genera
+filtered_orders_coleoptera <- filter(coleoptera_notcleaned, Genus %in% c("Lissorhoptrus", "Bagous", "Bledius", "Carpelimus", "Microbledius", "Psamathobledius", "Psephidonus", "Stenus", "Thinobius"))
+
+#diptera
+#family that are fully aquatic
+all_aquatictaxa_diptera <- filter(diptera_notcleaned, Family %in% c("Blephariceridae", "Nymphomyiidae", "Ptychopteridae", "Culicidae", "Chaoboridae","Dixidae", "Simuliidae", "Thaumaleidae", "Ceratopogonidae", "Chironomidae", "Psychodidae", "Tipulidae", "Limoniidae", "Stratiomyiidae", "Tabanidae", "Athericidae", "Dolichopodidae", "Empididae", "Syrphidae", "Sciomyzidae", "Ephydridae", "Muscidae", "Pediciidae"))
+#there are no family that only have certian genera that are aquatic
+
+#hymenoptera
+#family that are fully aquatic
+all_aquatictaxa_hymenoptera <- filter(hymenoptera_notcleaned, Family %in% c("Diapriidae", "Eulophidae", "Platygastridae", "Pteromalidae"))
+#there are no family that only have certian genera that are aquatic
+
+```
+
+##merge the aquatic taxa from chelsea's dataset
+```{r}
+aquatic_insect_taxa_matches <- rbind(ephemeroptera_allprimerinverts, trichoptera_allprimerinverts, plecoptera_allprimerinverts, odonata_allprimerinverts, megaloptera_allprimerinverts, all_aquatictaxa_hemiptera, all_aquatictaxa_neuroptera, all_aquatictaxa_lepidoptera, all_aquaticorder_coleoptera, filtered_orders_coleoptera, all_aquatictaxa_diptera, all_aquatictaxa_hymenoptera)
+
+```
+
+#extract what else needed to be checked for aquatic
+##compare the aquatic dataset from chelsea against the original dataset
+```{r}
+#dataframe with whatever didnt have a match in chelseas dataset (all of the non insect macros)
+allinvert_phyla_species_left_toCHECK <- anti_join(invert_phyla_species_toCHECK, aquatic_insect_taxa_matches, by = c("Family", "Genus"))
+
+#any Order that have some aquatic and some non-aquatic can be removed bc in theory all of the aquatic taxa have already been identified
+invert_phyla_species_left_toCHECK <- filter(allinvert_phyla_species_left_toCHECK, !Order %in% c("Hemiptera", "Neuroptera", "Lepidoptera", "Coleoptera", "Diptera", "Hymenoptera"))
+
+#how each distinct species gets a row
+taxonomyinvert_phyla_species_left_toCHECK_counts_ <- distinct(invert_phyla_species_left_toCHECK, Species, .keep_all = TRUE)
+
+#whole taxonomy as a csv
+write.csv(taxonomyinvert_phyla_species_left_toCHECK_counts_,"~outputs/tables/tables_toCheck/taxonomyinvert_phyla_species_left_toCHECK_counts_.csv", row.names = FALSE)
+
+#Write just species as a list to run against GBIF
+#get list of all species present with how many reads
+taxonomyinvert_phyla_species_left_toCHECK_speciescounts <- taxonomyinvert_phyla_species_left_toCHECK_counts_ %>%
+  count(Species, sort = TRUE)
+
+#get just the species names
+species_tocheck_inGBIF <- taxonomyinvert_phyla_species_left_toCHECK_speciescounts[,1]
+
+#species as a csv
+write.csv(species_tocheck_inGBIF,"outputs/tables/tables_toCheck/species_tocheck_inGBIF.csv", row.names = FALSE)
+
+```
+
+##Use GBIF to check the remaining species for US occurrences (from claude via penn state AI studio)
+
+```{r}
+## Simple GBIF US occurrence checker
+install.packages("rgbif")
+library(rgbif)
+library(dplyr)
+
+# Load your species list (a CSV with one column called "species")
+species_list <- read.csv("outputs/tables/tables_toCheck/species_tocheck_inGBIF.csv")$Species
+
+# Check each species for US occurrences
+results <- data.frame(species = character(), found_in_us = logical(), n_records = integer())
+
+for (sp in species_list) {
+  res <- occ_search(scientificName = sp, country = "US", limit = 1)
+  n <- ifelse(is.null(res$meta$count), 0, res$meta$count)
+  gbif_us_results <- rbind(results, data.frame(species = sp, found_in_us = n > 0, n_records = n))
+  Sys.sleep(0.5)  # avoid hammering the API
+}
+
+# View and save results
+print(gbif_us_results)
+write.csv(results, "outputs/tables/database_search/gbif_us_results.csv", row.names = FALSE)
+```
+
+##remove all non US species 
+```{r}
+#load results from GBIF search
+GBIF_results <- read_csv("outputs/tables/database_search/gbif_us_results.csv")
+
+#filter for rows where "found_in_us" are TRUE
+US_species_checkforaquatic <- filter(GBIF_results, found_in_us ==TRUE)
+
+#get dataframe of just species
+US_speciesONLY_tocheck_foraquatic <- US_species_checkforaquatic[,1]
+
+#download species list as CSV
+write.csv(US_speciesONLY_tocheck_foraquatic, "outputs/tables/database_search/GBIF_USspecies_foraquaticcheck.csv", row.names = FALSE)
+```
+
+##check species for aquatic using GBIF (code mostly from claude via penn state AI studio)
+###THIS DIDNT WORK
+###set up
+```{r}
+library(rgbif)
+
+#load the species list
+species_list <- read.csv("outputs/tables/database_search/GBIF_USspecies_foraquaticcheck.csv")$species
+
+# Keywords considered "aquatic" - checked against habitat text GBIF returns
+aquatic_keywords <- c("marine", "freshwater", "wetland", "aquatic", "river",
+                       "lake", "stream", "coastal", "estuar", "ocean", "sea")
+
+results <- data.frame(
+  species = character(),
+  aquatic = character(),   # "aquatic", "terrestrial", "unknown"
+  habitats = character(),
+  stringsAsFactors = FALSE
+)
+
+for (sp in species_list) {
+
+  # Step 1: resolve species name to a GBIF taxon key
+  match <- tryCatch(name_backbone(name = sp), error = function(e) NULL)
+
+  if (is.null(match) || is.null(match$usageKey)) {
+    results <- rbind(results, data.frame(species = sp, aquatic = "unknown", habitats = NA))
+    next
+  }
+
+  # Step 2: pull habitat data for that key (no API key required)
+  hab <- tryCatch(name_usage(key = match$usageKey, data = "habitats"),
+                  error = function(e) NULL)
+
+  if (is.null(hab) || is.null(hab$data) || nrow(hab$data) == 0) {
+    results <- rbind(results, data.frame(species = sp, aquatic = "unknown", habitats = NA))
+  } else {
+    habitat_text <- tolower(paste(hab$data$name, collapse = "; "))
+    is_aquatic <- any(sapply(aquatic_keywords, function(k) grepl(k, habitat_text)))
+    results <- rbind(results, data.frame(
+      species = sp,
+      aquatic = ifelse(is_aquatic, "aquatic", "terrestrial"),
+      habitats = habitat_text
+    ))
+  }
+
+  Sys.sleep(0.3)  # be polite to the API
+}
+
+print(results)
+write.csv(results, "outputs/tables/database_search/aquatic_status_results.csv", row.names = FALSE)
+
+# Species with no habitat data - need manual check or a secondary source
+unknowns <- filter(results, aquatic == "unknown")
+print(unknowns)
+```
+
+##use WORMS (world registrar of marine species) to identify aquatic species and if they are freshwater or marine
+
+```{r}
+#load worms package
+#install.packages("worrms")
+library(worrms)
+
+#load species list
+species_list <- read.csv("outputs/tables/database_search/GBIF_USspecies_foraquaticcheck.csv")$species
+ 
+results <- data.frame(
+  species = character(),
+  aquatic = character(),    # "aquatic", "terrestrial", "unknown"
+  source  = character(),    # "WoRMS"
+  detail  = character(),
+  stringsAsFactors = FALSE
+)
+ 
+for (sp in species_list) {
+ 
+  status <- "unknown"
+  source <- NA
+  detail <- NA
+ 
+  worms_hit <- tryCatch(wm_records_name(sp, marine_only = FALSE),
+                         error = function(e) NULL)
+ 
+  if (!is.null(worms_hit) && nrow(worms_hit) > 0) {
+    rec <- worms_hit[1, ]
+    flags <- c(rec$isMarine, rec$isBrackish, rec$isFreshwater)
+    is_aquatic <- any(flags %in% 1, na.rm = TRUE)
+    is_terrestrial_only <- isTRUE(rec$isTerrestrial == 1) && !is_aquatic
+ 
+    if (is_aquatic) {
+      status <- "aquatic"
+    } else if (is_terrestrial_only) {
+      status <- "terrestrial"
+    }
+ 
+    source <- "WoRMS"
+    detail <- paste0("marine=", rec$isMarine, "; brackish=", rec$isBrackish,
+                      "; freshwater=", rec$isFreshwater,
+                      "; terrestrial=", rec$isTerrestrial)
+  } else {
+    source <- "none"
+    detail <- "no WoRMS record found"
+  }
+ 
+  results <- rbind(results, data.frame(
+    species = sp,
+    aquatic = status,
+    source  = source,
+    detail  = detail,
+    stringsAsFactors = FALSE
+  ))
+ 
+  Sys.sleep(0.5)
+}
+ 
+write.csv(results, "outputs/tables/database_search/aquatic_status_results_worms.csv", row.names = FALSE)
+
+```
+
+##from WORMS results sort out aquatic, terrestrial, and unknown so unknowns can be checked
+
+```{r}
+#load results csv 
+worms_results <- read.csv("outputs/tables/database_search/aquatic_status_results_worms.csv")
+
+worms_aquatics <- filter(worms_results, aquatic == "aquatic")
+worms_unknown <- filter(worms_results, aquatic == "unknown")
+worms_terrestrial <- filter(worms_results, aquatic == "terrestrial")
+
+#download unknown as a CSV to check
+write.csv(worms_unknown, "outputs/tables/database_search/worms_unknown.csv", row.names = FALSE)
+```
+
+##unknowns have been checked by hand, load checked sheet
+```{r}
+checked_worms_unknowns <- read.csv("outputs/tables/database_search/checked_WoRMS_unknowns.csv")
+
+checked_worms_unknowns_AQUATIC <- filter(check_worms_unknowns, aquatic == "yes")
+
+#create species list of all confirmed aquatic taxa *confirmed by worms or by hand*
+worms_aquatics_species <- worms_aquatics[,1]
+checked_worms_unknowns_AQUATIC_species <- checked_worms_unknowns_AQUATIC[,1]
+
+#merge the species list from WORMS and those checked by hand
+aquatic_species_confirmed <- rbind(worms_aquatics_species, checked_worms_unknowns_AQUATIC_species, by = "species" )
+#name species column as "Species"
+aquatic_species_confirmed <- aquatic_species_confirmed %>% rename(Species = species)
+
+```
+
+#Aquatic Taxa
+
+##Extract the aquatic taxa from the whole taxonomy dataset
+```{r}
+aquatic_noninsect_taxa <-semi_join(taxonomyinvert_phyla_species_left_toCHECK_counts_, aquatic_species_confirmed, by = "Species")
+
+```
+
+##merge the aquatic non insect taxa with the aquatic insects confirmed by chelseas list
+```{r}
+ALL_aquatic_taxa <- rbind(aquatic_noninsect_taxa, aquatic_insect_taxa_matches)
+
+#how many distinct species do i have?
+distinct_species_aquatictaxa <- distinct(ALL_aquatic_taxa, Species, .keep_all = TRUE)
+```
+
+##write the whole aquatic taxonomy as a csv
+
+```{r}
+write.csv(ALL_aquatic_taxa, "outputs/tables/ALL_aquatic_taxa.csv", row.names = FALSE)
+
+```
+
+#Second Taxonomy Analysis
+##extract all of the ESVs which had no taxonomic match to species -> to be run through another database
+
+```{r}
+all_taxa_MIDORI <- rbind(BR5_taxonomy_ALL, COIF230_taxonomy_ALL, UNICOI_taxonomy_ALL)
+all_taxa_MIDORI_NAs <- filter(all_taxa_MIDORI, is.na(Species))
+all_taxa_MIDORI_NoMatch <- filter(all_taxa_MIDORI, Species == "NoMatch")
+#list all ESVs that need further analysis
+second_taxonomycheck <- rbind(all_taxa_MIDORI_NAs, all_taxa_MIDORI_NoMatch)
+colnames(second_taxonomycheck)[1] <- "hash"
+```
+
+##Load in all 3 raw ESV tables (the ones that have sequence info)
+```{r}
+raw_ESV_BR5 <- read.csv("data/rawData/esv_tables/0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+raw_ESV_COIF230 <- read.csv("data/rawData/esv_tables/0_COIF230_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+raw_ESV_UNICOI <- read.csv("data/rawData/esv_tables/0_UNICOI_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+
+```
+##since there are no ESVs that overlap as long as the esvs get a column with primer name for any downstream analysis/issues, the header on the pools can be removed and the ESVs can be merged into one large table
+
+```{r}
+
+#remove the prefix in columns 3-67 that keep the columns in each dataframe from lining up
+names(raw_ESV_BR5)[3:67] <- sub("^BR5_", "", names(raw_ESV_BR5)[3:67])
+names(raw_ESV_COIF230)[3:67] <- sub("^COIF230_", "", names(raw_ESV_COIF230)[3:67])
+names(raw_ESV_COIF230)[3:67] <- sub("_PE$", "", names(raw_ESV_COIF230)[3:67])
+names(raw_ESV_UNICOI)[3:67] <- sub("^UniCOI_", "", names(raw_ESV_UNICOI)[3:67])
+
+
+#add column with what primer generated ESV
+raw_ESV_BR5 <- raw_ESV_BR5 %>% mutate(primer = "BR5")
+raw_ESV_COIF230 <- raw_ESV_COIF230 %>% mutate(primer = "COIF230")
+raw_ESV_UNICOI <- raw_ESV_UNICOI %>% mutate(primer = "UNICOI")
+
+```
+
+##merge all 3 ESV tables to create one large table
+```{r}
+all_RAW_esvs <- rbind(raw_ESV_BR5, raw_ESV_COIF230, raw_ESV_UNICOI)
+```
+
+##from the total ESV table extract the esv's that do not match any of the esv's that had matches to species 
+```{r}
+second_roundESVs_fortaxonomy <- semi_join(all_RAW_esvs, second_taxonomycheck, by = "hash")
+
+#print to a csv
+write.csv(second_roundESVs_fortaxonomy, "outputs/tables/second_roundESVs_fortaxonomy.csv", row.names = FALSE)
+
+```

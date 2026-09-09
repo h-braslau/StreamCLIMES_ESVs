@@ -1,0 +1,192 @@
+---
+title: "convert_excel_toCSV"
+output: html_document
+date: "2026-08-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#set working directory
+
+```{r}
+setwd("~/Documents/Documents - Hannah MacBook Air/Penn State/Allen Lab/StreamCLIMES_ESV")
+```
+
+#install packages
+
+```{r}
+install.packages("readxl")
+library(readxl)
+```
+#i have the results from the taxonomy runs broken into 20 chunks per primer (br5, UNICOI, unicoi) but the results are in excels, not csv
+
+#BR5
+#import excel files
+```{r}
+BR5_taxonomy_1 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_001_taxonomy.xlsx")
+BR5_taxonomy_2 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_002_taxonomy.xlsx")
+BR5_taxonomy_3 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_003_taxonomy.xlsx")
+BR5_taxonomy_4 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_004_taxonomy.xlsx")
+BR5_taxonomy_5 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_005_taxonomy.xlsx")
+BR5_taxonomy_6 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_006_taxonomy.xlsx")
+BR5_taxonomy_7 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_007_taxonomy.xlsx")
+BR5_taxonomy_8 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_008_taxonomy.xlsx")
+BR5_taxonomy_9 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_009_taxonomy.xlsx")
+BR5_taxonomy_10 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_010_taxonomy.xlsx")
+BR5_taxonomy_11 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_011_taxonomy.xlsx")
+BR5_taxonomy_12 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_012_taxonomy.xlsx")
+BR5_taxonomy_13 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_013_taxonomy.xlsx")
+BR5_taxonomy_14 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_014_taxonomy.xlsx")
+BR5_taxonomy_15 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_015_taxonomy.xlsx")
+BR5_taxonomy_16 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_016_taxonomy.xlsx")
+BR5_taxonomy_17 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_017_taxonomy.xlsx")
+BR5_taxonomy_18 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_018_taxonomy.xlsx")
+BR5_taxonomy_19 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_019_taxonomy.xlsx")
+BR5_taxonomy_20 <- read_excel("data/rawData/taxonomy_results/BR5/results_chunk_020_taxonomy.xlsx")
+```
+
+##write files as csv 
+```{r}
+write.csv(BR5_taxonomy_1, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_1.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_2, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_2.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_3, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_3.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_4, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_4.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_5,"data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_5.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_6, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_6.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_7, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_7.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_8, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_8.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_9, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_9.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_10, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_10.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_11, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_11.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_12, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_12.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_13, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_13.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_14, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_14.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_15, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_15.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_16, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_16.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_17, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_17.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_18, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_18.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_19, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_19.csv", row.names = FALSE)
+write.csv(BR5_taxonomy_20, "data/rawData/taxonomy_results_csv/BR5/BR5_taxonomy_20.csv", row.names = FALSE)
+
+```
+
+#COIF230
+#import excel files
+```{r}
+COIF230_taxonomy_1 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_001_taxonomy.xlsx")
+COIF230_taxonomy_2 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_002_taxonomy.xlsx")
+COIF230_taxonomy_3 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_003_taxonomy.xlsx")
+COIF230_taxonomy_4 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_004_taxonomy.xlsx")
+COIF230_taxonomy_5 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_005_taxonomy.xlsx")
+COIF230_taxonomy_6 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_006_taxonomy.xlsx")
+COIF230_taxonomy_7 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_007_taxonomy.xlsx")
+COIF230_taxonomy_8 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_008_taxonomy.xlsx")
+COIF230_taxonomy_9 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_009_taxonomy.xlsx")
+COIF230_taxonomy_10 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_010_taxonomy.xlsx")
+COIF230_taxonomy_11 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_011_taxonomy.xlsx")
+COIF230_taxonomy_12 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_012_taxonomy.xlsx")
+COIF230_taxonomy_13 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_013_taxonomy.xlsx")
+COIF230_taxonomy_14 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_014_taxonomy.xlsx")
+COIF230_taxonomy_15 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_015_taxonomy.xlsx")
+COIF230_taxonomy_16 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_016_taxonomy.xlsx")
+COIF230_taxonomy_17 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_017_taxonomy.xlsx")
+COIF230_taxonomy_18 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_018_taxonomy.xlsx")
+COIF230_taxonomy_19 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_019_taxonomy.xlsx")
+COIF230_taxonomy_20 <- read_excel("data/rawData/taxonomy_results/COIF230/results_chunk_020_taxonomy.xlsx")
+```
+
+##write files as csv 
+```{r}
+write.csv(COIF230_taxonomy_1, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_1.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_2, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_2.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_3, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_3.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_4, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_4.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_5,"data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_5.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_6, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_6.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_7, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_7.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_8, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_8.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_9, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_9.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_10, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_10.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_11, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_11.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_12, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_12.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_13, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_13.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_14, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_14.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_15, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_15.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_16, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_16.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_17, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_17.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_18, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_18.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_19, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_19.csv", row.names = FALSE)
+write.csv(COIF230_taxonomy_20, "data/rawData/taxonomy_results_csv/COIF230/COIF230_taxonomy_20.csv", row.names = FALSE)
+
+```
+
+#UNICOI
+
+#import excel files
+```{r}
+UNICOI_taxonomy_1 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_001_taxonomy.xlsx")
+UNICOI_taxonomy_2 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_002_taxonomy.xlsx")
+UNICOI_taxonomy_3 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_003_taxonomy.xlsx")
+UNICOI_taxonomy_4 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_004_taxonomy.xlsx")
+UNICOI_taxonomy_5 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_005_taxonomy.xlsx")
+UNICOI_taxonomy_6 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_006_taxonomy.xlsx")
+UNICOI_taxonomy_7 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_007_taxonomy.xlsx")
+UNICOI_taxonomy_8 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_008_taxonomy.xlsx")
+UNICOI_taxonomy_9 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_009_taxonomy.xlsx")
+UNICOI_taxonomy_10 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_010_taxonomy.xlsx")
+UNICOI_taxonomy_11 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_011_taxonomy.xlsx")
+UNICOI_taxonomy_12 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_012_taxonomy.xlsx")
+UNICOI_taxonomy_13 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_013_taxonomy.xlsx")
+UNICOI_taxonomy_14 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_014_taxonomy.xlsx")
+UNICOI_taxonomy_15 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_015_taxonomy.xlsx")
+UNICOI_taxonomy_16 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_016_taxonomy.xlsx")
+UNICOI_taxonomy_17 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_017_taxonomy.xlsx")
+UNICOI_taxonomy_18 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_018_taxonomy.xlsx")
+UNICOI_taxonomy_19 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_019_taxonomy.xlsx")
+UNICOI_taxonomy_20 <- read_excel("data/rawData/taxonomy_results/UNICOI/results_chunk_020_taxonomy.xlsx")
+```
+
+##write files as csv 
+```{r}
+write.csv(UNICOI_taxonomy_1, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_1.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_2, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_2.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_3, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_3.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_4, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_4.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_5,"data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_5.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_6, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_6.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_7, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_7.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_8, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_8.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_9, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_9.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_10, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_10.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_11, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_11.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_12, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_12.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_13, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_13.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_14, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_14.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_15, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_15.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_16, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_16.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_17, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_17.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_18, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_18.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_19, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_19.csv", row.names = FALSE)
+write.csv(UNICOI_taxonomy_20, "data/rawData/taxonomy_results_csv/UNICOI/UNICOI_taxonomy_20.csv", row.names = FALSE)
+
+```
+
+#ESV tables
+##read in excel files generated by APSCALE
+```{r}
+BR5_ESVs <- read_xlsx("data/rawData/esv_tables/0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.xlsx")
+
+COIF230_ESVs <- read_xlsx("data/rawData/esv_tables/0_COIF230_StreamCLIMES_eDNA_sequence_read_table_part_0.xlsx")
+  
+UNICOI_ESVs <- read_xlsx("data/rawData/esv_tables/0_UNICOI_StreamCLIMES_eDNA_sequence_read_table_part_0.xlsx")
+```
+##write files as csv
+
+```{r}
+write.csv(BR5_ESVs, "data/rawData/esv_tables/0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.csv", row.names = FALSE)
+
+write.csv(COIF230_ESVs, "data/rawData/esv_tables/0_COIF230_StreamCLIMES_eDNA_sequence_read_table_part_0.csv", row.names = FALSE)
+
+write.csv(UNICOI_ESVs, "data/rawData/esv_tables/0_UNICOI_StreamCLIMES_eDNA_sequence_read_table_part_0.csv", row.names = FALSE)
+```

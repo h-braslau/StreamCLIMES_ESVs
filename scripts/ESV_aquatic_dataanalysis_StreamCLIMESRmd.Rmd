@@ -1,0 +1,83 @@
+---
+title: "ESV_aquatic_dataanalysis_StreamCLIMES"
+output: html_document
+date: "2026-08-20"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#set Working Directory
+```{r}
+setwd("~/Documents/Documents - Hannah MacBook Air/Penn State/Allen Lab/StreamCLIMES_ESV")
+```
+
+#Load packages
+```{r}
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+```
+
+#Load the original ESV tables in
+```{r}
+BR5_ESVs <- read.csv("data/rawData/esv_tables/0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+
+COIF230_ESVs <- read.csv("data/rawData/esv_tables/0_COIF230_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+  
+UNICOI_ESVs <- read.csv("data/rawData/esv_tables/0_UNICOI_StreamCLIMES_eDNA_sequence_read_table_part_0.csv")
+
+```
+
+#What/how many ESVs are present in multiple primers?
+
+```{r}
+br5_coif230_overlap <- intersect(BR5_ESVs$sequence, COIF230_ESVs$sequence)
+length(br5_coif230_overlap)
+br5_unicoi_overlap <- intersect(BR5_ESVs$sequence, UNICOI_ESVs$sequence)
+length(br5_unicoi_overlap)
+coif230_unicoi_overlap <- intersect(COIF230_ESVs$sequence, UNICOI_ESVs$sequence)
+length(coif230_unicoi_overlap)
+
+#there are no ESVs that overlap between the 3 primers
+```
+
+#since there are no ESVs that overlap as long as the esvs get a column with primer name for any downstream analysis/issues, the header on the pools can be removed and the ESVs can be merged into one large table
+
+```{r}
+#add column with what primer generated ESV
+BR5_ESVs <- BR5_ESVs %>% mutate(primer = "BR5")
+COIF230_ESVs <- COIF230_ESVs %>% mutate(primer = "COIF230")
+UNICOI_ESVs <- UNICOI_ESVs %>% mutate(primer = "UNICOI")
+
+#remove the prefix in columns 3-67 that keep the columns in each dataframe from lining up
+names(BR5_ESVs)[3:67] <- sub("^BR5_", "", names(BR5_ESVs)[3:67])
+names(COIF230_ESVs)[3:67] <- sub("^COIF230_", "", names(COIF230_ESVs)[3:67])
+names(COIF230_ESVs)[3:67] <- sub("_PE$", "", names(COIF230_ESVs)[3:67])
+names(UNICOI_ESVs)[3:67] <- sub("^UniCOI_", "", names(UNICOI_ESVs)[3:67])
+
+
+#add column with what primer generated ESV
+BR5_ESVs <- BR5_ESVs %>% mutate(primer = "BR5")
+COIF230_ESVs <- COIF230_ESVs %>% mutate(primer = "COIF230")
+UNICOI_ESVs <- UNICOI_ESVs %>% mutate(primer = "UNICOI")
+
+
+all_ESVs <- rbind(BR5_ESVs, COIF230_ESVs, UNICOI_ESVs)
+```
+
+#read in metadata to convert pool ID to site names (Convert to csv)
+```{r}
+pools_to_sites <- read_xlsx("sampleID_sitenames_metadata.xlsx")
+```
+
+##assign site names instead of the pooled ID
+```{r}
+all_ESVs_withsite <- all_ESVs %>%
+  rename_with(~ pools_to_sites$Site[match(., pools_to_sites$SampleID)],
+              .cols = pools_to_sites$SampleID)
+
+colnames(all_ESVs_withsite)
+```
