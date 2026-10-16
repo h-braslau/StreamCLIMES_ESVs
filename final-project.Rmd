@@ -1,0 +1,210 @@
+---
+title: "Using Exact Sequence Variants (ESVs) to characterize biogeographical patterns of stream biodiversity "
+author: "Hannah Braslau"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+I am looking at intraspecific variation of macroinvertebrates across streams in the southern United States. Exact Sequence Variants (ESVs) act as a haplotype proxy when looking at a community as they show subspecies variation from sequences. All of my data was collected by environmental DNA (eDNA) and then metaboarding was run on the eDNA samples. From the seqeuencing results, I generated ESVs using APSCALE which will be the focus of this project. From the 7 stream basins, there are 5-10 sites within each basin. I am hoping to observe patterns of subspecies variation in macroinvertebrate communities witin and across stream basins. 
+
+# Research Questions
+
+*Replace this list with the exploratory questions from your Week 1 proposal. You can sharpen them now that you know your data better.*
+
+1. How do ESVs vary within a stream basin 
+2. Are ESVs replicated across stream basins in similar environmental conditions
+
+# Rationale
+
+ I am interested in looking at the subspecies variation occurring at these sites. There are multiple sites within a basin, and i am interested in seeing if ESVs are replicated between sites and if the occur across different basins. These ESVs are of macroinvertebrates, and I am interested in their community composition, because stream health can be inferred from the macros present. I want to be able to visualize community similarity within sites and differences between basins. I also want to answer if there are factors which correlate with community similarity and how the data from ESVs compares to historical datasets. 
+
+# Project Organization
+
+
+```
+final-project/
+├── README.md
+├── data/
+│   ├── rawData/
+│         ├── esv_tables
+│         ├── taxonomy_results
+│         ├── taxonomy_results_csv
+│             └── megablast_run
+│             └── BR5
+│             └── COIF230
+│             └── UNICOI
+│   └── processedData/
+│         ├── tables/
+│             └── ALL_aquatic_taxa.csv
+│             └── BR5_second_roundESVs_fortaxonomy.csv
+│             └── COIF230_second_roundESVs_fortaxonomy.csv
+│             └── UNICOI_second_roundESVs_fortaxonomy.csv
+│             └── second_roundESVs_fortaxonomy.csv
+│             └── second_taxonomycheck.csv
+│             └── tables_toCheck/
+│                   └──gbif_us_results.csv
+│                   └──GBIF_USspecies_foraquaticcheck.csv
+│                   └──invert_phyla_species_toCHECK_byCLAUDE.csv
+│                   └──species_tocheck_inGBIF.csv
+│                   └──taxonomyinvert_phyla_species_left_toCHECK_counts_.csv
+│                   └──taxonomyinvert_phyla_species_toCHECK_counts_.csv
+│                   └──US_species_checkforaquatic.csv
+│             └── database_search/
+│                   └──aquatic_status_results_worms.csv
+│                   └──aquatic_status_results.csv
+│                   └──checked_WoRMS_unknowns.csv
+│                   └──worms_unknown.csv
+│         └── BR5_ESVs_forfasta.fasta
+│         └── COIF230_ESVs_forfasta.fasta
+│         └── UNICOI_ESVs_forfasta.fasta
+│         └── allprimer_ESVssecond_round.fasta
+├── scripts/
+│     └── convert_excel_toCSV.Rmd
+│     └── ESV_aquatic_dataanalysis_StreamCLIMESRmd.Rmd
+│     └── ESV_Data_Cleaning_StreamCLIMES.Rmd
+├── final-project.Rmd
+├── fromchelsea_aquatictaxa_list_SE.xlsx
+├── sampleID_sitenames_metadata.xlsx
+└── output/
+
+    
+```
+
+| Folder or file | What it holds |
+|----------------|---------------|
+| `final-project.Rmd` | This report. |
+| `README.md` | A short description of the project. |
+| `data/raw/` | The original data files, exactly as downloaded. These are never edited. |
+| `data/processed/` | Cleaned data, and the tables built by the scripts. |
+| `scripts/` | The R scripts that process the data. |
+| `output/figures/` | Figures produced by the scripts. |
+| `output/tables/` | Tables produced by the scripts. |
+
+The project is stored in a GitHub repository: <https://github.com/h-braslau/StreamCLIMES_ESVs>
+
+# Raw Data
+
+I have a LOT of data. My data is currently stored in three forms within the rawData folder. In the esv_tables folder, I have the raw csv and xlsx files generated from the APSCALE pipeline when I generated the ESVs. Since I have 3 primers that were used, there are 3 ESV tables produced. In the taxonomy_results folder, there is another folder for megablast_run which has a folder for each primer. Inside each primers folder, there are 20 xlsx tables that make up the taxonomy results from running APSCALE-Blast with megablast on the sequences. There will eventually be a "blast" folder with the same structure when I rerun the sequences that did not get classified to species in this run. In the rawData folder there is also a taxonomy_results_csv folder that mirrors the structure mentioned above, it just contains the raw files in CSV format instead of xlsx.  
+
+These are the files currently in `data/rawData/`:
+
+```{r raw-file-list}
+raw_files <- list.files("data/rawData/", full.names = TRUE)
+knitr::kable(data.frame(file = basename(raw_files),
+                        size_kb = round(file.size(raw_files) / 1024, 1)))
+```
+
+## File 1: 0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.csv
+
+- **Source:** This data was produced first by Jonah Ventures for the raw sequencing, and then I generated the ESVs with APSCALE myself. 
+- **Link:** This is unpublished data - the Raw sequencing data is on a private google drive, and backed up on my OneDrive
+- **Date accessed:** The ESVs were generated on 3/30/2026
+- **License or terms of use:** This is private data
+- **Citation:** I am unsure
+
+This file contains the ESVs for the primer BR5 that I generated with APSCALE. This contains the pooled metabarcoding runs for eDNA samples that were collected March-July 2022. Each row is a unique ESV and the columns are the pools. 
+
+```{r read-file-1}
+file1 <- read.csv("data/rawData/esv_tables/0_BR5_StreamCLIMES_eDNA_sequence_read_table_part_0.csv", stringsAsFactors = FALSE, na.strings = "")
+```
+
+This file has `r nrow(file1)` rows and `r ncol(file1)` columns. Here are the first few rows:
+
+```{r head-file-1}
+knitr::kable(head(file1))
+```
+
+And here is the type of each column, as R reads it:
+
+```{r str-file-1}
+str(file1)
+```
+
+### Data dictionary for file 1
+
+| Variable | Description | Type | Units |
+|----------|-------------|------|-------|
+| `hash` | *unqiueID for ESV* | *chr* | *none* |
+| `sequence` | *raw seqeuence for the ESV* | *chr* | *none* |
+| `BR5_S077363` | *PoolID from metabarcoding run* | *integer* | *reads* |
+| `This repeats across 64 more columns for additional pools` | *PoolID from metabarcoding run* | *integer* | *reads* |
+
+This structure is repeated across 5 more files, 2 per each primer (BR5, COIF230, UNICOI) in csv and xlsx format. 
+
+## File 2: taxonomy_results_csv/megablast_run/BR5/BR5_taxonomy_1.csv
+
+- **Source:** This is the seqeuence data I generated from the ESVs above via APSCALE-BLAST using megablast 
+- **Link:** This is unpublished data 
+- **Date accessed:** These were generated on 8/26/2026
+- **License or terms of use:** This is private data
+- **Citation:** I am unsure
+
+This file contains the taxonomy results generated by megablast through the APSCALE-BLAST pipeline. This is the raw data from the runs which are in 20 files because i needed to create subsets of my large dataset for computational ability 
+
+```{r read-file-2}
+file2 <- read.csv("data/rawData/taxonomy_results_csv/megablast_run/BR5/BR5_taxonomy_1.csv", stringsAsFactors = FALSE, na.strings = "")
+```
+
+This file has `r nrow(file1)` rows and `r ncol(file1)` columns. Here are the first few rows:
+
+```{r head-file-2}
+knitr::kable(head(file2))
+```
+
+And here is the type of each column, as R reads it:
+
+```{r str-file-2}
+str(file2)
+```
+
+### Data dictionary for file 2
+
+| Variable | Description | Type | Units |
+|----------|-------------|------|-------|
+| `unique.ID` | *unqiueID for ESV* | *character* | *none* |
+| `Kingdom` | *kingdom name* | *character* | *none* |
+| `Phylum` | *Phylum name* | *character* | *none* |
+| `Class` | *Class name* | *character* | *none* |
+| `Order` | *Order name* | *character* | *none* |
+| `Family` | *Family name* | *character* | *none* |
+| `Genus` | *Genus name* | *character* | *none* |
+| `Species` | *Species Name* | *character* | *none* |
+
+This structure is repeated across 20 files for each primer (BR5, COIF230, UNICOI) in csv and xlsx format. 
+
+
+# Planned Workflow
+
+From the taxonomy, I need to match what is actually an aquatic species. To do this, I am using the Thorp and Covich book, the merritt and cummings book, and the GBIF and WORMS databases to weed out all non aquatic and non US species. After the aquatic species have been confimed, I then need to match each PoolID to a site name to be able to do my analysis and visualizations
+
+## Data cleaning
+
+The taxonomy data will need to be merged from 20 into one file for each primer. There is a lot of steps to confirm the aquatic species.  
+
+## Visualization
+
+I am not entirely sure what figure I want to make yet. I am thinking potentially a PCoA to look at Beta Diversity across the different basins. I also want to make a bar graph to look at alpha diversity in each basin at the different sites. 
+
+## Analysis
+
+By comparing Beta diversity between and across stream basins, I will be able to observe patterns of similarity from the different sites. I am very open to what kinds of analyses I should do
+
+# References
+Buchner, D., Macher, T.-H., and Leese, F. (2022). APSCALE: advanced pipeline for simple yet comprehensive analyses of DNA metabarcoding data. Bioinformatics 38, 4817–4819. https://doi.org/10.1093/bioinformatics/btac588.
+
+Leray, M., Knowlton, N., & Machida, R. J. (2022). MIDORI2: A collection of quality controlled, preformatted, and regularly updated reference databases for taxonomic assignment of eukaryotic mitochondrial sequences. Environmental DNA, 4(4), 894–907. https://doi.org/10.1002/edn3.303
+
+# Session Information
+
+```{r session-info}
+sessionInfo()
+```

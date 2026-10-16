@@ -754,9 +754,9 @@ UNICOI_second_roundESVs_fortaxonomy <- semi_join(raw_ESV_UNICOI, second_taxonomy
 
 
 #print to a csv
-write.csv(BR5_second_roundESVs_fortaxonomy, "proccessedData/tables/BR5_second_roundESVs_fortaxonomy", row.names = FALSE)
-write.csv(COIF230_second_roundESVs_fortaxonomy, "proccessedData/tables/COIF230_second_roundESVs_fortaxonomy", row.names = FALSE)
-write.csv(UNICOI_second_roundESVs_fortaxonomy, "proccessedData/tables/UNICOI_second_roundESVs_fortaxonomy", row.names = FALSE)
+write.csv(BR5_second_roundESVs_fortaxonomy, "proccessedData/tables/BR5_second_roundESVs_fortaxonomy.csv", row.names = FALSE)
+write.csv(COIF230_second_roundESVs_fortaxonomy, "proccessedData/tables/COIF230_second_roundESVs_fortaxonomy.csv", row.names = FALSE)
+write.csv(UNICOI_second_roundESVs_fortaxonomy, "proccessedData/tables/UNICOI_second_roundESVs_fortaxonomy.csv", row.names = FALSE)
 
 ```
 
