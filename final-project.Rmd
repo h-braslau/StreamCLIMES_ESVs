@@ -28,7 +28,7 @@ I am looking at intraspecific variation of macroinvertebrates across streams in 
  I am interested in looking at the subspecies variation occurring at these sites. There are multiple sites within a basin, and i am interested in seeing if ESVs are replicated between sites and if the occur across different basins. These ESVs are of macroinvertebrates, and I am interested in their community composition, because stream health can be inferred from the macros present. I want to be able to visualize community similarity within sites and differences between basins. I also want to answer if there are factors which correlate with community similarity and how the data from ESVs compares to historical datasets. 
 
 # Project Organization
-
+This report is published at: https://h-braslau.github.io/StreamCLIMES_ESVs/
 
 ```
 final-project/
